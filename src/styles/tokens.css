@@ -1,0 +1,212 @@
+/* ==========================================================================
+   Design tokens.
+
+   Two families of colour live here and they must not be confused:
+
+   1. CHROME + INK  — page background, rules, body text, links, nav.
+   2. SERIES SLOTS  — the eight categorical chart hues, assigned in fixed
+      order and never cycled. These are the validated palette from the
+      dataviz method, re-verified against this site's own surfaces:
+        light surface #fcfbf8 → all checks pass (three slots sit below 3:1,
+        so every figure ships direct labels + a table view as relief)
+        dark  surface #15171a → all checks pass
+      Do not re-pick these by eye. Re-run the validator if you change them.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* -- surfaces & ink ---------------------------------------------------- */
+  --page: #f4f2ec;
+  --surface-1: #fcfbf8;
+  --surface-2: #f7f5f0;
+  --surface-sunken: #edeae2;
+
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+
+  --rule: #dcd9d0;
+  --rule-strong: #c3c2b7;
+  --gridline: #e1e0d9;
+  --baseline: #c3c2b7;
+  --border-hairline: rgba(11, 11, 11, 0.1);
+
+  --accent: #a8431d;
+  --accent-soft: rgba(168, 67, 29, 0.1);
+
+  /* -- categorical series slots (fixed order, never cycled) -------------- */
+  --series-1: #2a78d6; /* blue    */
+  --series-2: #eb6834; /* orange  */
+  --series-3: #1baf7a; /* aqua    */
+  --series-4: #eda100; /* yellow  */
+  --series-5: #e87ba4; /* magenta */
+  --series-6: #008300; /* green   */
+  --series-7: #4a3aa7; /* violet  */
+  --series-8: #e34948; /* red     */
+
+  /* Series used as a de-emphasised "context" mark (the rest of the world). */
+  --series-context: #b6b3aa;
+
+  /* Ink for a label set *inside* a filled mark: white or near-black, picked
+     per slot by the fill's luminance so an in-segment label always clears
+     contrast. Never used for text sitting on the surface. */
+  --series-1-ink: #ffffff;
+  --series-2-ink: #10100f;
+  --series-3-ink: #10100f;
+  --series-4-ink: #10100f;
+  --series-5-ink: #10100f;
+  --series-6-ink: #ffffff;
+  --series-7-ink: #ffffff;
+  --series-8-ink: #10100f;
+  --series-context-ink: #10100f;
+
+  /* -- sequential ramp (one hue, light → dark) --------------------------- */
+  --seq-100: #cde2fb;
+  --seq-200: #9ec5f4;
+  --seq-300: #6da7ec;
+  --seq-400: #3987e5;
+  --seq-500: #256abf;
+  --seq-600: #184f95;
+  --seq-700: #0d366b;
+
+  /* -- status (reserved; never a series colour) -------------------------- */
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-serious: #ec835a;
+  --status-critical: #d03b3b;
+  --delta-good: #006300;
+
+  /* -- type ------------------------------------------------------------- */
+  --font-serif: ui-serif, 'Iowan Old Style', 'Palatino Linotype', Palatino,
+    'Times New Roman', Georgia, serif;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+
+  /* -- measure & rhythm -------------------------------------------------- */
+  /* One left edge governs the whole page: prose, headings and figures all
+     start at the same x. Figures are allowed to run wider to the right. */
+  --measure: 40rem; /* reading column      */
+  --measure-wide: 61rem; /* figures & tables    */
+  --measure-full: 68rem; /* section containers  */
+
+  --shadow-card: 0 1px 2px rgba(11, 11, 11, 0.04), 0 8px 24px rgba(11, 11, 11, 0.05);
+  --shadow-pop: 0 2px 6px rgba(11, 11, 11, 0.08), 0 12px 32px rgba(11, 11, 11, 0.14);
+}
+
+/* The dark values are *selected* for the dark surface, not an automatic flip.
+   Declared under both scopes: the media query follows the OS, the data-theme
+   scope follows the in-page toggle, and the toggle wins in both directions. */
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme='light'])) {
+    color-scheme: dark;
+
+    --page: #0b0c0e;
+    --surface-1: #15171a;
+    --surface-2: #1b1e22;
+    --surface-sunken: #101215;
+
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+
+    --rule: #2a2d31;
+    --rule-strong: #3a3d42;
+    --gridline: #24272b;
+    --baseline: #383835;
+    --border-hairline: rgba(255, 255, 255, 0.1);
+
+    --accent: #e0855f;
+    --accent-soft: rgba(224, 133, 95, 0.14);
+
+    --series-1: #3987e5;
+    --series-2: #d95926;
+    --series-3: #199e70;
+    --series-4: #c98500;
+    --series-5: #d55181;
+    --series-6: #008300;
+    --series-7: #9085e9;
+    --series-8: #e66767;
+
+    --series-context: #55575a;
+
+  --series-1-ink: #ffffff;
+  --series-2-ink: #10100f;
+  --series-3-ink: #10100f;
+  --series-4-ink: #10100f;
+  --series-5-ink: #10100f;
+  --series-6-ink: #ffffff;
+  --series-7-ink: #10100f;
+  --series-8-ink: #10100f;
+  --series-context-ink: #ffffff;
+
+    --seq-100: #0d366b;
+    --seq-200: #184f95;
+    --seq-300: #256abf;
+    --seq-400: #2a78d6;
+    --seq-500: #3987e5;
+    --seq-600: #6da7ec;
+    --seq-700: #9ec5f4;
+
+    --delta-good: #0ca30c;
+
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-pop: 0 2px 6px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --page: #0b0c0e;
+  --surface-1: #15171a;
+  --surface-2: #1b1e22;
+  --surface-sunken: #101215;
+
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+
+  --rule: #2a2d31;
+  --rule-strong: #3a3d42;
+  --gridline: #24272b;
+  --baseline: #383835;
+  --border-hairline: rgba(255, 255, 255, 0.1);
+
+  --accent: #e0855f;
+  --accent-soft: rgba(224, 133, 95, 0.14);
+
+  --series-1: #3987e5;
+  --series-2: #d95926;
+  --series-3: #199e70;
+  --series-4: #c98500;
+  --series-5: #d55181;
+  --series-6: #008300;
+  --series-7: #9085e9;
+  --series-8: #e66767;
+
+  --series-context: #55575a;
+
+  --series-1-ink: #ffffff;
+  --series-2-ink: #10100f;
+  --series-3-ink: #10100f;
+  --series-4-ink: #10100f;
+  --series-5-ink: #10100f;
+  --series-6-ink: #ffffff;
+  --series-7-ink: #10100f;
+  --series-8-ink: #10100f;
+  --series-context-ink: #ffffff;
+
+  --seq-100: #0d366b;
+  --seq-200: #184f95;
+  --seq-300: #256abf;
+  --seq-400: #2a78d6;
+  --seq-500: #3987e5;
+  --seq-600: #6da7ec;
+  --seq-700: #9ec5f4;
+
+  --delta-good: #0ca30c;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-pop: 0 2px 6px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.6);
+}

@@ -1,0 +1,325 @@
+/* ==========================================================================
+   Site chrome: masthead, navigation, hero, chapter scaffolding, footer.
+   ========================================================================== */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__main {
+  flex: 1;
+}
+
+/* -- masthead ------------------------------------------------------------ */
+
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: saturate(1.4) blur(10px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.masthead__inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  min-height: 3.75rem;
+}
+
+.masthead__brand {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  text-decoration: none;
+  flex: none;
+}
+
+.masthead__mark {
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.masthead__mark em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.masthead__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-left: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.masthead__nav::-webkit-scrollbar {
+  display: none;
+}
+
+.navlink {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.45rem 0.6rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.navlink:hover {
+  color: var(--text-primary);
+  background: var(--surface-2);
+}
+
+.navlink--active {
+  color: var(--text-primary);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+  border-radius: 4px 4px 0 0;
+}
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface-1);
+  cursor: pointer;
+  flex: none;
+}
+
+.icon-button:hover {
+  border-color: var(--rule-strong);
+}
+
+/* -- hero ---------------------------------------------------------------- */
+
+.hero {
+  padding-block: clamp(3.5rem, 8vw, 7rem) clamp(2.5rem, 5vw, 4rem);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero__title {
+  margin-top: 0.9rem;
+  max-width: 18ch;
+}
+
+.hero__lede {
+  margin-top: 1.5rem;
+  max-width: 52ch;
+}
+
+.hero__meta {
+  margin-top: 2.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.75rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* -- chapter cards on the home page -------------------------------------- */
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+
+.chapter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1.6rem 1.5rem 1.75rem;
+  background: var(--surface-1);
+  text-decoration: none;
+  transition: background 0.16s ease;
+}
+
+.chapter-card:hover {
+  background: var(--surface-2);
+}
+
+.chapter-card__index {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+}
+
+.chapter-card__title {
+  font-size: 1.3rem;
+  line-height: 1.2;
+}
+
+.chapter-card__blurb {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.chapter-card__cue {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: var(--accent);
+}
+
+/* -- chapter page scaffolding -------------------------------------------- */
+
+.chapter-header {
+  padding-block: clamp(2.75rem, 6vw, 4.5rem) 2rem;
+}
+
+.chapter-header__title {
+  margin-top: 0.75rem;
+}
+
+.chapter-header__lede {
+  margin-top: 1.25rem;
+  max-width: 56ch;
+}
+
+.section {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+  border-top: 1px solid var(--rule);
+}
+
+.section__head {
+  max-width: var(--measure);
+  margin-bottom: 2rem;
+}
+
+.section__title {
+  margin-top: 0.6rem;
+}
+
+.section__body {
+  max-width: var(--measure);
+}
+
+.section__body + .figure,
+.figure + .section__body,
+.figure + .figure {
+  margin-top: 2.5rem;
+}
+
+/* A pull-quote sized statistic used to break up prose. */
+.pullstat {
+  max-width: var(--measure);
+  margin: 2.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--accent);
+}
+
+.pullstat__value {
+  font-family: var(--font-sans);
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  font-weight: 650;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.pullstat__body {
+  margin-top: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 1.02rem;
+}
+
+/* -- chapter pager ------------------------------------------------------- */
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 2.5rem 4rem;
+  border-top: 1px solid var(--rule);
+}
+
+.pager__link {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  text-decoration: none;
+  color: var(--text-secondary);
+  max-width: 46%;
+}
+
+.pager__link strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.2rem;
+}
+
+.pager__link:hover strong {
+  color: var(--accent);
+}
+
+/* -- footer -------------------------------------------------------------- */
+
+.site-footer {
+  border-top: 1px solid var(--rule);
+  background: var(--surface-sunken);
+  padding-block: 2.5rem 3rem;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1.75rem;
+}
+
+.site-footer h4 {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.65rem;
+}
+
+.site-footer ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.site-footer a {
+  text-decoration: none;
+}
+
+.site-footer a:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+}
+
+.site-footer__note {
+  margin-top: 2.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--rule);
+  color: var(--text-muted);
+  max-width: 68ch;
+  line-height: 1.6;
+}

@@ -1,0 +1,517 @@
+/* ==========================================================================
+   The figure frame: title, controls, chart, legend, table twin, provenance.
+
+   Every figure on this site carries:
+     - a legend whenever there are two or more series,
+     - a table view (the WCAG-clean twin, and the relief for the light-mode
+       series colours that sit below 3:1 against the surface),
+     - a provenance badge that states whether the numbers on screen came from
+       a live API call or the committed snapshot.
+   ========================================================================== */
+
+.figure {
+  max-width: var(--measure-wide);
+  background: var(--surface-1);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.figure__head {
+  padding: 1.25rem 1.35rem 0.9rem;
+}
+
+.figure__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.figure__title {
+  font-size: 1.18rem;
+  line-height: 1.28;
+  margin-top: 0.35rem;
+}
+
+.figure__subtitle {
+  margin-top: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+/* One control row, above everything it scopes. */
+.figure__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1.35rem 0.9rem;
+}
+
+.control-group {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.control-group__label {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding-inline: 0.7rem 0.15rem;
+}
+
+.chip {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  line-height: 1;
+  padding: 0.42rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  color: var(--text-primary);
+  background: var(--accent-soft);
+}
+
+.chip[aria-pressed='true'],
+.chip[aria-selected='true'] {
+  background: var(--text-primary);
+  color: var(--surface-1);
+  font-weight: 600;
+}
+
+.figure__plot {
+  position: relative;
+  padding: 0 0.35rem 0.35rem;
+}
+
+/* Refetch keeps the frame: hold the previous render, dimmed. No skeleton. */
+.figure__plot[data-stale='true'] {
+  opacity: 0.55;
+  transition: opacity 0.18s ease;
+}
+
+.figure__foot {
+  border-top: 1px solid var(--rule);
+  padding: 0.85rem 1.35rem 1.1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+  background: var(--surface-2);
+}
+
+.figure__source {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  max-width: 62ch;
+}
+
+.figure__source a {
+  color: var(--text-secondary);
+  text-decoration-color: var(--rule-strong);
+}
+
+.figure__source a:hover {
+  color: var(--text-primary);
+}
+
+.figure__note {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  padding: 0.75rem 1.35rem 0;
+  max-width: 68ch;
+}
+
+.figure__actions {
+  display: flex;
+  gap: 0.35rem;
+  flex: none;
+}
+
+.text-button {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  background: transparent;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 0.28rem 0.7rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.text-button:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+/* -- provenance badge ---------------------------------------------------- */
+
+.provenance {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+  background: var(--surface-1);
+  cursor: help;
+}
+
+.provenance__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  flex: none;
+  background: var(--text-muted);
+}
+
+.provenance--live .provenance__dot {
+  background: var(--status-good);
+}
+
+.provenance--snapshot .provenance__dot {
+  background: var(--status-warning);
+}
+
+.provenance--curated .provenance__dot {
+  background: var(--seq-400);
+}
+
+.provenance--loading .provenance__dot {
+  background: var(--text-muted);
+}
+
+/* -- legend -------------------------------------------------------------- */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  padding: 0.1rem 1.35rem 0.85rem;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.legend__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: transparent;
+  border: 0;
+  padding: 0.15rem 0;
+  cursor: pointer;
+  color: inherit;
+}
+
+.legend__item[aria-pressed='false'] {
+  opacity: 0.42;
+}
+
+/* The legend mirrors the mark: a rect for bars/areas, a line for lines. */
+.legend__key {
+  flex: none;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.legend__key--rect {
+  width: 11px;
+  height: 11px;
+}
+
+.legend__key--line {
+  width: 16px;
+  height: 3px;
+  border-radius: 999px;
+}
+
+/* -- chart svg ----------------------------------------------------------- */
+
+.chart {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  font-family: var(--font-sans);
+}
+
+.chart text {
+  font-family: var(--font-sans);
+}
+
+.chart__grid line {
+  stroke: var(--gridline);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.chart__axis line,
+.chart__axis path {
+  stroke: var(--baseline);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.chart__tick {
+  font-size: 11px;
+  fill: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart__axis-title {
+  font-size: 10.5px;
+  fill: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.chart__label {
+  font-size: 11.5px;
+  fill: var(--text-secondary);
+}
+
+.chart__label--strong {
+  font-size: 12px;
+  font-weight: 600;
+  fill: var(--text-primary);
+}
+
+.chart__annotation {
+  font-size: 11px;
+  fill: var(--text-muted);
+}
+
+.chart__annotation-rule {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+
+.chart__line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.chart__area {
+  stroke: none;
+  opacity: 0.1;
+}
+
+.chart__marker {
+  stroke: var(--surface-1);
+  stroke-width: 2;
+}
+
+.chart__bar {
+  stroke: none;
+}
+
+.chart__crosshair {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.chart__hit {
+  fill: transparent;
+  cursor: crosshair;
+}
+
+.chart__mark-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.chart__bar-group:hover .chart__bar,
+.chart__bar-group:focus-visible .chart__bar {
+  filter: brightness(1.12);
+}
+
+/* -- tooltip ------------------------------------------------------------- */
+
+.tooltip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  min-width: 10rem;
+  max-width: 17rem;
+  background: var(--surface-1);
+  border: 1px solid var(--rule-strong);
+  border-radius: 5px;
+  box-shadow: var(--shadow-pop);
+  padding: 0.55rem 0.7rem;
+  font-family: var(--font-sans);
+  transform: translate(-50%, -100%);
+}
+
+.tooltip__head {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+}
+
+.tooltip__row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.22rem;
+}
+
+.tooltip__key {
+  width: 14px;
+  height: 3px;
+  border-radius: 999px;
+  flex: none;
+  align-self: center;
+  background: currentColor;
+}
+
+/* Values lead, labels follow. */
+.tooltip__value {
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.tooltip__name {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+/* -- table twin ---------------------------------------------------------- */
+
+.data-table-wrap {
+  max-height: 21rem;
+  overflow: auto;
+  border-top: 1px solid var(--rule);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.42rem 1.35rem;
+  text-align: right;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  text-align: left;
+  font-variant-numeric: normal;
+}
+
+.data-table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-weight: 600;
+  z-index: 1;
+}
+
+.data-table tbody tr:hover td {
+  background: var(--surface-2);
+}
+
+/* -- stat tiles ---------------------------------------------------------- */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  max-width: var(--measure-wide);
+}
+
+.stat-tile {
+  background: var(--surface-1);
+  padding: 1.15rem 1.2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.stat-tile__label {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+}
+
+.stat-tile__value {
+  font-family: var(--font-sans);
+  font-size: clamp(1.6rem, 1.3rem + 1.1vw, 2.05rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.stat-tile__delta {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.stat-tile__delta--good {
+  color: var(--delta-good);
+}
+
+.stat-tile__foot {
+  margin-top: auto;
+  padding-top: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.stat-tile__foot a {
+  color: inherit;
+}
+
+/* The hero figure: exactly one per view. */
+.hero-figure {
+  font-family: var(--font-sans);
+  font-size: clamp(3.2rem, 2rem + 5.5vw, 6rem);
+  font-weight: 680;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}

@@ -1,0 +1,47 @@
+name: Refresh data snapshot
+
+# Regenerates src/data/snapshots/generated.json from the publishers' APIs.
+# The site fetches live in the reader's browser anyway; this keeps the
+# committed fallback current for readers whose network blocks those calls.
+
+on:
+  schedule:
+    # 05:30 UTC every Monday — 11:00 IST.
+    - cron: '30 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fetch from publishers
+        run: npm run refresh-data
+
+      - name: Verify the refreshed data still builds
+        run: |
+          npm run verify-sources
+          npm run build
+
+      - name: Commit if anything changed
+        run: |
+          if git diff --quiet -- src/data/snapshots/generated.json; then
+            echo "No change in published data."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/snapshots/generated.json
+          git commit -m "chore(data): refresh snapshot from publisher APIs"
+          git push

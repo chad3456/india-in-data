@@ -1,0 +1,5 @@
+{
+  "generatedAt": null,
+  "note": "Written by `npm run refresh-data`. Until that runs against a network-enabled environment this file is empty and every API-backed figure falls back to the hand-transcribed snapshot in src/data/series/*.ts, which the UI labels as such.",
+  "series": {}
+}

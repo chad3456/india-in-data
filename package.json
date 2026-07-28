@@ -1,0 +1,35 @@
+{
+  "name": "india-in-data",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "India in Data — an interactive, source-cited data narrative of India's growth.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
+    "refresh-data": "node scripts/refresh-data.mjs",
+    "verify-sources": "node scripts/verify-sources.mjs"
+  },
+  "dependencies": {
+    "d3-array": "^3.2.4",
+    "d3-format": "^3.1.0",
+    "d3-scale": "^4.0.2",
+    "d3-shape": "^3.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-format": "^3.0.4",
+    "@types/d3-scale": "^4.0.8",
+    "@types/d3-shape": "^3.1.6",
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9"
+  }
+}
