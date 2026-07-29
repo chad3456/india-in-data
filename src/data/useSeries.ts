@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import { combineProvenance, healthSnapshot, loadSeries, snapshotFor, subscribeHealth } from './loader'
+import {
+  combineProvenance,
+  healthSnapshot,
+  loadSeries,
+  primeDatabase,
+  snapshotFor,
+  subscribeHealth,
+} from './loader'
 import type { LoadedSeries, Provenance, SeriesSpec } from './types'
 
 export interface SeriesState {
@@ -48,7 +55,14 @@ export function useSeries(specs: SeriesSpec[]): SeriesState {
 
     setState({ series: initial, provenance: 'loading', loading: true, errors: [] })
 
-    Promise.all(specsRef.current.map((spec) => loadSeries(spec, controller.signal))).then(
+    primeDatabase(
+      specsRef.current.map((spec) => spec.id),
+      controller.signal,
+    )
+      .then(() =>
+        Promise.all(specsRef.current.map((spec) => loadSeries(spec, controller.signal))),
+      )
+      .then(
       (resolved) => {
         if (cancelled) return
         const fetchedAt = resolved

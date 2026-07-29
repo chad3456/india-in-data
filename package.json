@@ -10,9 +10,11 @@
     "preview": "vite preview",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
     "refresh-data": "node scripts/refresh-data.mjs",
-    "verify-sources": "node scripts/verify-sources.mjs"
+    "verify-sources": "node scripts/verify-sources.mjs",
+    "export-seed": "node scripts/export-seed.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.111.0",
     "d3-array": "^3.2.4",
     "d3-format": "^3.1.0",
     "d3-scale": "^4.0.2",

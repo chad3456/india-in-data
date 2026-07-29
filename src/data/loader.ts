@@ -13,6 +13,7 @@
 
 import type { LoadedSeries, Point, Provenance, SeriesSpec } from './types'
 import generated from './snapshots/generated.json'
+import { fetchSeriesFromDatabase, supabaseConfigured, type DbSeriesResult } from './supabase'
 
 /* -- the generated snapshot ----------------------------------------------- */
 
@@ -102,6 +103,7 @@ function recount(): void {
   let curated = 0
   for (const p of health.values()) {
     if (p === 'live' || p === 'live-cached') live += 1
+    else if (p === 'database') live += 1
     else if (p === 'snapshot') snapshot += 1
     else if (p === 'curated') curated += 1
   }
@@ -126,6 +128,31 @@ export function healthSnapshot(): HealthCounts {
   return cachedCounts
 }
 
+/* -- the database tier ---------------------------------------------------- */
+// Supabase is the canonical store, so it is tried first and in one batched
+// round trip per figure rather than one call per series.
+
+const dbCache = new Map<string, DbSeriesResult | null>()
+let dbReachable = supabaseConfigured
+
+export async function primeDatabase(ids: string[], signal: AbortSignal): Promise<void> {
+  if (!dbReachable) return
+  const missing = ids.filter((id) => !dbCache.has(id))
+  if (missing.length === 0) return
+  try {
+    const found = await fetchSeriesFromDatabase(missing, signal)
+    for (const id of missing) dbCache.set(id, found.get(id) ?? null)
+  } catch {
+    // One failure is enough: stop hammering a database that is not answering
+    // and let every series fall through to the tiers below.
+    dbReachable = false
+  }
+}
+
+export function databaseIsReachable(): boolean {
+  return dbReachable
+}
+
 /* -- the loader ----------------------------------------------------------- */
 
 /** In-flight requests, so two figures sharing a series make one call. */
@@ -136,6 +163,18 @@ export function loadSeries(spec: SeriesSpec, signal: AbortSignal): Promise<Loade
   if (existing) return existing
 
   const run = (async (): Promise<LoadedSeries> => {
+    // The canonical store answers first when it has the series.
+    const fromDb = dbCache.get(spec.id)
+    if (fromDb) {
+      publish(spec.id, 'database')
+      return {
+        spec,
+        points: fromDb.points,
+        provenance: 'database',
+        fetchedAt: fromDb.meta.last_ingested_at ?? undefined,
+      }
+    }
+
     // No live provider: the publisher has no API. Values are transcribed from
     // a cited release, which is a legitimate provenance, not a failure.
     if (!spec.live) {
@@ -186,8 +225,8 @@ export function loadSeries(spec: SeriesSpec, signal: AbortSignal): Promise<Loade
 /** The weakest provenance across a set of series governs the figure's badge. */
 export function combineProvenance(series: LoadedSeries[]): Provenance {
   if (series.length === 0) return 'loading'
-  const order: Provenance[] = ['snapshot', 'curated', 'live-cached', 'live']
-  let worst = 3
+  const order: Provenance[] = ['snapshot', 'curated', 'live-cached', 'live', 'database']
+  let worst = order.length - 1
   for (const s of series) {
     const rank = order.indexOf(s.provenance)
     if (rank >= 0 && rank < worst) worst = rank
@@ -196,6 +235,7 @@ export function combineProvenance(series: LoadedSeries[]): Provenance {
 }
 
 export const PROVENANCE_LABEL: Record<Provenance, string> = {
+  database: 'Supabase',
   live: 'Live',
   'live-cached': 'Live · cached',
   curated: 'Cited release',
@@ -204,6 +244,8 @@ export const PROVENANCE_LABEL: Record<Provenance, string> = {
 }
 
 export const PROVENANCE_EXPLAINER: Record<Provenance, string> = {
+  database:
+    "Read from this project's Supabase catalogue, which an ingest job refreshes from the publisher. The retrieval date is shown alongside.",
   live: "Fetched from the publisher's API in your browser just now.",
   'live-cached':
     "Fetched from the publisher's API in this browser earlier and reused from local cache.",

@@ -20,7 +20,9 @@ export function ProvenanceBadge({
   errors?: string[]
 }) {
   const modifier =
-    provenance === 'live' || provenance === 'live-cached'
+    provenance === 'database'
+      ? 'database'
+      : provenance === 'live' || provenance === 'live-cached'
       ? 'live'
       : provenance === 'curated'
         ? 'curated'

@@ -10,6 +10,8 @@
 
 /** How the numbers currently on screen were obtained. */
 export type Provenance =
+  /** Read from the project's Supabase catalogue — the canonical store. */
+  | 'database'
   /** Fetched from the publisher's API in this browser, just now. */
   | 'live'
   /** Fetched from the publisher's API earlier in this browser, still inside its TTL. */
